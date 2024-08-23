@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "minime",
-    "description": "Base Level Extension",
+    "name": "page-in-picture",
+    "description": "makes it possible to open an always-on-top browser window",
     "version": "1.0",
     "permissions": [
       "activeTab",
@@ -11,7 +11,7 @@
       "service_worker": "main.js"
     },
   "action": {
-    "default_title": "Action Button"
+    "default_title": "page-in-picture"
   }
 }
   
