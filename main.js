@@ -1,42 +1,35 @@
-async function injectedFunction() {
-
-  const doc = document.getElementsByTagName("BODY")[0];
+async function injectedFunction(tabUrl) {
 
   const pipWindow = await documentPictureInPicture.requestWindow({
     width: 640,
     height: 360,
   });
 
-  //Copy all style sheets.
-  [...document.styleSheets].forEach((styleSheet) => {
-    try {
-      const cssRules = [...styleSheet.cssRules].map((rule) => rule.cssText).join('');
-      const style = document.createElement('style');
+  const iframe = document.createElement('iframe');
+  iframe.style.width = '100%';
+  iframe.style.height = '100%';
+  iframe.style.border = 'none';
+  iframe.src = tabUrl;
 
-      style.textContent = cssRules;
-      pipWindow.document.head.appendChild(style);
-    } catch (e) {
-      const link = document.createElement('link');
+  
+  // Disable scrolling in the iframe
+  iframe.style.overflow = 'hidden';
+  
+  // Set margin, padding, and overflow to 0 for the pipWindow document body
+  pipWindow.document.body.style.margin = '0';
+  pipWindow.document.body.style.padding = '0';
 
-      link.rel = 'stylesheet';
-      link.type = styleSheet.type;
-      link.media = styleSheet.media;
-      link.href = styleSheet.href;
-      pipWindow.document.head.appendChild(link);
-    }
-  });
-
-  pipWindow.document.body.append(doc);
+  pipWindow.document.body.appendChild(iframe);
 
   pipWindow.addEventListener("pagehide", (event) => {
       window.location.reload();
   })
-
 }
 
 chrome.action.onClicked.addListener((tab) => {
   chrome.scripting.executeScript({
     target : {tabId : tab.id},
     func : injectedFunction,
+    args: [tab.url]
   });
 });
