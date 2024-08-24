@@ -1,9 +1,7 @@
 async function injectedFunction(tabUrl) {
 
-  console.log("SDDDDDDDDDFS")
-
   let href;
-  let sameOrigin;
+  let useBody = false;
 
   const pipWindow = await documentPictureInPicture.requestWindow({
     width: 640,
@@ -25,8 +23,9 @@ async function injectedFunction(tabUrl) {
   iframe.onload = () => {
     try {
       href = iframe.contentWindow.location.href;
-
     } catch {
+      useBody = true;
+
       pipWindow.document.body.innerHTML = "";
 
       const doc = document.getElementsByTagName("BODY")[0];
@@ -53,11 +52,24 @@ async function injectedFunction(tabUrl) {
       });
 
       pipWindow.document.body.append(doc);
+
+      const body = document.createElement("body");
+      const heading = document.createElement("h1");
+      heading.textContent = "You're viewing this Page In-Picture mode.";
+      const subheading = document.createElement("h5");
+      subheading.textContent = "We apologize, but this feature may not function correctly for this page.";
+
+      body.appendChild(heading);
+      body.appendChild(subheading);
+
+      document.documentElement.appendChild(body);
     }
   };
 
   pipWindow.addEventListener("pagehide", (event) => {
-    window.location.reload();
+    if (useBody) {
+      window.location.reload();
+    }
   });
 }
 
@@ -70,17 +82,14 @@ chrome.action.onClicked.addListener((tab) => {
 });
 
 chrome.runtime.onInstalled.addListener(() => {
-  
   chrome.contextMenus.create({
     id: "pip",
     title: "Page-In-Picture",
-    contexts: ["all"] 
+    contexts: ["all"],
   });
 });
 
-
 chrome.contextMenus.onClicked.addListener((info, tab) => {
- 
   if (info.menuItemId === "pip") {
     chrome.scripting.executeScript({
       target: { tabId: tab.id },
