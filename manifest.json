@@ -4,6 +4,7 @@
     "description": "makes it possible to open an always-on-top browser window",
     "version": "1.0",
     "permissions": [
+      "contextMenus",
       "activeTab",
       "scripting"
     ],

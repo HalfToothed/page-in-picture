@@ -1,4 +1,7 @@
 async function injectedFunction(tabUrl) {
+
+  console.log("SDDDDDDDDDFS")
+
   let href;
   let sameOrigin;
 
@@ -64,4 +67,25 @@ chrome.action.onClicked.addListener((tab) => {
     func: injectedFunction,
     args: [tab.url],
   });
+});
+
+chrome.runtime.onInstalled.addListener(() => {
+  
+  chrome.contextMenus.create({
+    id: "pip",
+    title: "Page-In-Picture",
+    contexts: ["all"] 
+  });
+});
+
+
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+ 
+  if (info.menuItemId === "pip") {
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: injectedFunction,
+      args: [tab.url],
+    });
+  }
 });
