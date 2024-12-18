@@ -8,16 +8,15 @@ async function injectedFunction(tabUrl) {
     height: 360,
   });
 
-  // Set margin, padding, and overflow to 0 for the pipWindow document body
+  const iframe = document.createElement("iframe");
+  iframe.style.width = "100vw";
+  iframe.style.height = "100vh";
+  iframe.style.border = "none";
+  iframe.style.overflow = "hidden";
+  iframe.src = tabUrl;
   pipWindow.document.body.style.margin = "0";
   pipWindow.document.body.style.padding = "0";
 
-  const iframe = document.createElement("iframe");
-  iframe.style.width = "100%";
-  iframe.style.height = "100%";
-  iframe.style.border = "none";
-  iframe.src = tabUrl;
-  iframe.style.overflow = "hidden";
   pipWindow.document.body.appendChild(iframe);
 
   iframe.onload = () => {
