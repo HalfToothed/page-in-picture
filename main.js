@@ -12,10 +12,11 @@ async function injectedFunction(tabUrl) {
   iframe.style.width = "100vw";
   iframe.style.height = "100vh";
   iframe.style.border = "none";
-  iframe.style.overflow = "hidden";
+  iframe.style.overflow = "scroll";
   iframe.src = tabUrl;
   pipWindow.document.body.style.margin = "0";
   pipWindow.document.body.style.padding = "0";
+  pipWindow.document.body.style.overflow = "hidden";
 
   pipWindow.document.body.appendChild(iframe);
 
